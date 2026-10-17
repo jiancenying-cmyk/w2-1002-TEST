@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 程式練習介面</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_1002.css') }}">
+    <!-- CSS檔案連結 -->
+</head>
+<body>
+    <div class="container">
+        <h1>AI 程式練習助手</h1>
+        <p>這是一個用於練習程式設計的 AI 助手。請在下方輸入您的程式碼，並點擊「執行」按鈕來查看結果。</p>
+        
+        <!-- 第一個表單：選擇學習主題並出題 -->
+        <h3>請輸入選擇的學習主題: {{ topic }}</h3>
+        <form method="post">
+            <div class="topics">
+                <label>
+                    <input type="radio" name="topic" value="輸入輸出" {% if topic == "輸入輸出" %}checked{% endif %}> 輸入輸出
+                </label>
+                <label>
+                    <input type="radio" name="topic" value="條件判斷" {% if topic == "條件判斷" %}checked{% endif %}> 條件判斷
+                </label>
+                <label>
+                    <input type="radio" name="topic" value="迴圈" {% if topic == "迴圈" %}checked{% endif %}> 迴圈
+                </label>
+                <label>
+                    <input type="radio" name="topic" value="串列" {% if topic == "串列" %}checked{% endif %}> 串列
+                </label>
+            </div>
+            <button class="min-btn">幫我出題</button>
+        </form>
+
+        <!-- AI 出題與作答區塊 (對應 Step 10) -->
+        <div class="question_ai">
+            <h3>AI 出題:</h3>
+            <p>{{ question_text }}</p>
+
+            <!-- 只有當點擊「幫我出題」且題目不是預設提示文字時，才顯示作答選項與提交按鈕 -->
+            {% if question_text != "請先選擇學習主題" and question_text != "尚未放置題目" %}
+            <form method="POST">
+                <!-- 隱藏欄位，提交時保留目前的學習主題 -->
+                <input type="hidden" name="topic" value="{{ topic }}">
+                
+                <!-- 根據不同主題顯示對應的選項 -->
+                {% if topic == "輸入輸出" %}
+                    <label><input type="radio" name="student_answer" value="A"> A. input()</label>
+                    <label><input type="radio" name="student_answer" value="B"> B. print()</label>
+                    <label><input type="radio" name="student_answer" value="C"> C. len()</label>
+                    <label><input type="radio" name="student_answer" value="D"> D. range()</label>
+                {% elif topic == "條件判斷" %}
+                    <label><input type="radio" name="student_answer" value="A"> A. if</label>
+                    <label><input type="radio" name="student_answer" value="B"> B. for</label>
+                    <label><input type="radio" name="student_answer" value="C"> C. while</label>
+                    <label><input type="radio" name="student_answer" value="D"> D. def</label>
+                {% elif topic == "迴圈" %}
+                    <label><input type="radio" name="student_answer" value="A"> A. while</label>
+                    <label><input type="radio" name="student_answer" value="B"> B. for</label>
+                    <label><input type="radio" name="student_answer" value="C"> C. print</label>
+                    <label><input type="radio" name="student_answer" value="D"> D. input</label>
+                {% elif topic == "串列" %}
+                    <label><input type="radio" name="student_answer" value="A"> A. [ ]</label>
+                    <label><input type="radio" name="student_answer" value="B"> B. ( )</label>
+                    <label><input type="radio" name="student_answer" value="C"> C. { }</label>
+                    <label><input type="radio" name="student_answer" value="D"> D. &lt; &gt;</label>
+                {% endif %}
+
+                <!-- 提交答案按鈕 -->
+                <button type="submit" class="min-btn" name="action" value="check">提交答案</button>
+            </form>
+            {% endif %}
+        </div>
+
+        <!-- 顯示 AI 回饋結果 (對應 Step 11) -->
+        <div class="feedback">
+            <h3>AI 回饋:</h3>
+            <p>{{ feedback }}</p>
+        </div>
+    </div>
+</body>
+</html>
